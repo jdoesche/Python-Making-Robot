@@ -163,6 +163,8 @@ def dispatch_hook(key, hooks, hook_data, **kwargs):
             if _hook_data is not None:
                 hook_data = _hook_data
     return hook_data
+
+
 """
 requests.utils
 ~~~~~~~~~~~~~~
@@ -1259,6 +1261,8 @@ def rewind_body(prepared_request):
             )
     else:
         raise UnrewindableBodyError("Unable to rewind request body for redirect.")
+
+
 # .-. .-. .-. . . .-. .-. .-. .-.
 # |(  |-  |.| | | |-  `-.  |  `-.
 # ' ' `-' `-`.`-' `-' `-'  '  `-'
@@ -1424,6 +1428,8 @@ class FileModeWarning(RequestsWarning, DeprecationWarning):
 
 class RequestsDependencyWarning(RequestsWarning):
     """An imported dependency doesn't match the expected version range."""
+
+
 """
 requests.models
 ~~~~~~~~~~~~~~~
@@ -1589,9 +1595,11 @@ class RequestEncodingMixin:
 
                     new_fields.append(
                         (
-                            field.decode("utf-8")
-                            if isinstance(field, bytes)
-                            else field,
+                            (
+                                field.decode("utf-8")
+                                if isinstance(field, bytes)
+                                else field
+                            ),
                             v.encode("utf-8") if isinstance(v, str) else v,
                         )
                     )
@@ -2456,6 +2464,8 @@ class Response:
         release_conn = getattr(self.raw, "release_conn", None)
         if release_conn is not None:
             release_conn()
+
+
 """
 requests.sessions
 ~~~~~~~~~~~~~~~~~
@@ -3287,6 +3297,8 @@ def session():
     :rtype: Session
     """
     return Session()
+
+
 #   __
 #  /__)  _  _     _   _ _/   _
 # / (   (- (/ (/ (- _)  /  _)
@@ -3566,6 +3578,8 @@ class LookupDict(dict):
 
     def get(self, key, default=None):
         return self.__dict__.get(key, default)
+
+
 """
 requests._internal_utils
 ~~~~~~~~~~~~~~
@@ -3616,6 +3630,8 @@ def unicode_is_ascii(u_string):
         return True
     except UnicodeEncodeError:
         return False
+
+
 #!/usr/bin/env python
 
 """
@@ -3947,6 +3963,8 @@ class HTTPDigestAuth(AuthBase):
 
     def __ne__(self, other):
         return not self == other
+
+
 import sys
 
 try:
@@ -4134,6 +4152,8 @@ def delete(url, **kwargs):
     """
 
     return request("delete", url, **kwargs)
+
+
 """Module containing bug report helper(s)."""
 
 import json
@@ -4829,6 +4849,8 @@ def merge_cookies(cookiejar, cookies):
                 cookiejar.set_cookie(cookie_in_jar)
 
     return cookiejar
+
+
 """
 requests.compat
 ~~~~~~~~~~~~~~~
@@ -5642,6 +5664,8 @@ class HTTPAdapter(BaseAdapter):
                 raise
 
         return self.build_response(request, resp)
+
+
 import copy
 import filecmp
 import os
@@ -6600,6 +6624,8 @@ def test_should_bypass_proxies_win_registry_ProxyOverride_value(monkeypatch):
     monkeypatch.setattr(winreg, "OpenKey", OpenKey)
     monkeypatch.setattr(winreg, "QueryValueEx", QueryValueEx)
     assert should_bypass_proxies("http://example.com/", None) is False
+
+
 import contextlib
 import os
 
@@ -6617,6 +6643,8 @@ def override_environ(**kwargs):
     finally:
         os.environ.clear()
         os.environ.update(save_env)
+
+
 import pytest
 
 from requests.structures import CaseInsensitiveDict, LookupDict
@@ -6695,6 +6723,8 @@ class TestLookupDict:
     @get_item_parameters
     def test_get(self, key, value):
         assert self.lookup_dict.get(key) == value
+
+
 """Requests test package initialisation."""
 
 import warnings
@@ -6722,6 +6752,8 @@ def test_can_access_idna_attribute():
 
 def test_can_access_chardet_attribute():
     requests.packages.chardet
+
+
 import socket
 import threading
 import time
@@ -6887,6 +6919,8 @@ class TestTestServer:
 
         # if the server thread fails to finish, the test suite will hang
         # and get killed by the jenkins timeout.
+
+
 try:
     from http.server import HTTPServer, SimpleHTTPRequestHandler
 except ImportError:
@@ -6945,6 +6979,8 @@ def nosan_server(tmp_path_factory):
 
     server.shutdown()
     server_thread.join()
+
+
 import threading
 
 import pytest
@@ -6960,11 +6996,10 @@ def echo_response_handler(sock):
     """Simple handler that will take request and echo it back to requester."""
     request_content = consume_socket_content(sock, timeout=0.5)
 
-    text_200 = (
-        b"HTTP/1.1 200 OK\r\n"
-        b"Content-Length: %d\r\n\r\n"
-        b"%s"
-    ) % (len(request_content), request_content)
+    text_200 = (b"HTTP/1.1 200 OK\r\n" b"Content-Length: %d\r\n\r\n" b"%s") % (
+        len(request_content),
+        request_content,
+    )
     sock.send(text_200)
 
 
@@ -6990,10 +7025,7 @@ def test_chunked_encoding_error():
         request_content = consume_socket_content(sock, timeout=0.5)
 
         # The server never ends the request and doesn't provide any valid chunks
-        sock.send(
-            b"HTTP/1.1 200 OK\r\n"
-            b"Transfer-Encoding: chunked\r\n"
-        )
+        sock.send(b"HTTP/1.1 200 OK\r\n" b"Transfer-Encoding: chunked\r\n")
 
         return request_content
 
@@ -7077,24 +7109,25 @@ def test_digestauth_401_count_reset_on_redirect():
 
     See https://github.com/psf/requests/issues/1979.
     """
-    text_401 = (b'HTTP/1.1 401 UNAUTHORIZED\r\n'
-                b'Content-Length: 0\r\n'
-                b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
-                b', opaque="372825293d1c26955496c80ed6426e9e", '
-                b'realm="me@kennethreitz.com", qop=auth\r\n\r\n')
+    text_401 = (
+        b"HTTP/1.1 401 UNAUTHORIZED\r\n"
+        b"Content-Length: 0\r\n"
+        b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
+        b', opaque="372825293d1c26955496c80ed6426e9e", '
+        b'realm="me@kennethreitz.com", qop=auth\r\n\r\n'
+    )
 
-    text_302 = (b'HTTP/1.1 302 FOUND\r\n'
-                b'Content-Length: 0\r\n'
-                b'Location: /\r\n\r\n')
+    text_302 = b"HTTP/1.1 302 FOUND\r\n" b"Content-Length: 0\r\n" b"Location: /\r\n\r\n"
 
-    text_200 = (b'HTTP/1.1 200 OK\r\n'
-                b'Content-Length: 0\r\n\r\n')
+    text_200 = b"HTTP/1.1 200 OK\r\n" b"Content-Length: 0\r\n\r\n"
 
-    expected_digest = (b'Authorization: Digest username="user", '
-                       b'realm="me@kennethreitz.com", '
-                       b'nonce="6bf5d6e4da1ce66918800195d6b9130d", uri="/"')
+    expected_digest = (
+        b'Authorization: Digest username="user", '
+        b'realm="me@kennethreitz.com", '
+        b'nonce="6bf5d6e4da1ce66918800195d6b9130d", uri="/"'
+    )
 
-    auth = requests.auth.HTTPDigestAuth('user', 'pass')
+    auth = requests.auth.HTTPDigestAuth("user", "pass")
 
     def digest_response_handler(sock):
         # Respond to initial GET with a challenge.
@@ -7110,7 +7143,7 @@ def test_digestauth_401_count_reset_on_redirect():
         # Verify Authorization isn't sent to the redirected host,
         # then send another challenge.
         request_content = consume_socket_content(sock, timeout=0.5)
-        assert b'Authorization:' not in request_content
+        assert b"Authorization:" not in request_content
         sock.send(text_401)
 
         # Verify Authorization is sent correctly again, and return 200 OK.
@@ -7124,13 +7157,13 @@ def test_digestauth_401_count_reset_on_redirect():
     server = Server(digest_response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/'
+        url = f"http://{host}:{port}/"
         r = requests.get(url, auth=auth)
         # Verify server succeeded in authenticating.
         assert r.status_code == 200
         # Verify Authorization was sent in final request.
-        assert 'Authorization' in r.request.headers
-        assert r.request.headers['Authorization'].startswith('Digest ')
+        assert "Authorization" in r.request.headers
+        assert r.request.headers["Authorization"].startswith("Digest ")
         # Verify redirect happened as we expected.
         assert r.history[0].status_code == 302
         close_server.set()
@@ -7140,17 +7173,21 @@ def test_digestauth_401_only_sent_once():
     """Ensure we correctly respond to a 401 challenge once, and then
     stop responding if challenged again.
     """
-    text_401 = (b'HTTP/1.1 401 UNAUTHORIZED\r\n'
-                b'Content-Length: 0\r\n'
-                b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
-                b', opaque="372825293d1c26955496c80ed6426e9e", '
-                b'realm="me@kennethreitz.com", qop=auth\r\n\r\n')
+    text_401 = (
+        b"HTTP/1.1 401 UNAUTHORIZED\r\n"
+        b"Content-Length: 0\r\n"
+        b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
+        b', opaque="372825293d1c26955496c80ed6426e9e", '
+        b'realm="me@kennethreitz.com", qop=auth\r\n\r\n'
+    )
 
-    expected_digest = (b'Authorization: Digest username="user", '
-                       b'realm="me@kennethreitz.com", '
-                       b'nonce="6bf5d6e4da1ce66918800195d6b9130d", uri="/"')
+    expected_digest = (
+        b'Authorization: Digest username="user", '
+        b'realm="me@kennethreitz.com", '
+        b'nonce="6bf5d6e4da1ce66918800195d6b9130d", uri="/"'
+    )
 
-    auth = requests.auth.HTTPDigestAuth('user', 'pass')
+    auth = requests.auth.HTTPDigestAuth("user", "pass")
 
     def digest_failed_response_handler(sock):
         # Respond to initial GET with a challenge.
@@ -7166,7 +7203,7 @@ def test_digestauth_401_only_sent_once():
 
         # Verify the client didn't respond to second challenge.
         request_content = consume_socket_content(sock, timeout=0.5)
-        assert request_content == b''
+        assert request_content == b""
 
         return request_content
 
@@ -7174,7 +7211,7 @@ def test_digestauth_401_only_sent_once():
     server = Server(digest_failed_response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/'
+        url = f"http://{host}:{port}/"
         r = requests.get(url, auth=auth)
         # Verify server didn't authenticate us.
         assert r.status_code == 401
@@ -7187,13 +7224,15 @@ def test_digestauth_only_on_4xx():
 
     See https://github.com/psf/requests/issues/3772.
     """
-    text_200_chal = (b'HTTP/1.1 200 OK\r\n'
-                     b'Content-Length: 0\r\n'
-                     b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
-                     b', opaque="372825293d1c26955496c80ed6426e9e", '
-                     b'realm="me@kennethreitz.com", qop=auth\r\n\r\n')
+    text_200_chal = (
+        b"HTTP/1.1 200 OK\r\n"
+        b"Content-Length: 0\r\n"
+        b'WWW-Authenticate: Digest nonce="6bf5d6e4da1ce66918800195d6b9130d"'
+        b', opaque="372825293d1c26955496c80ed6426e9e", '
+        b'realm="me@kennethreitz.com", qop=auth\r\n\r\n'
+    )
 
-    auth = requests.auth.HTTPDigestAuth('user', 'pass')
+    auth = requests.auth.HTTPDigestAuth("user", "pass")
 
     def digest_response_handler(sock):
         # Respond to GET with a 200 containing www-authenticate header.
@@ -7203,7 +7242,7 @@ def test_digestauth_only_on_4xx():
 
         # Verify the client didn't respond with auth.
         request_content = consume_socket_content(sock, timeout=0.5)
-        assert request_content == b''
+        assert request_content == b""
 
         return request_content
 
@@ -7211,7 +7250,7 @@ def test_digestauth_only_on_4xx():
     server = Server(digest_response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/'
+        url = f"http://{host}:{port}/"
         r = requests.get(url, auth=auth)
         # Verify server didn't receive auth from us.
         assert r.status_code == 200
@@ -7220,9 +7259,9 @@ def test_digestauth_only_on_4xx():
 
 
 _schemes_by_var_prefix = [
-    ('http', ['http']),
-    ('https', ['https']),
-    ('all', ['http', 'https']),
+    ("http", ["http"]),
+    ("https", ["https"]),
+    ("all", ["http", "https"]),
 ]
 
 _proxy_combos = []
@@ -7253,35 +7292,36 @@ def test_use_proxy_from_environment(httpbin, var, scheme):
 
 
 def test_redirect_rfc1808_to_non_ascii_location():
-    path = 'š'
-    expected_path = b'%C5%A1'
+    path = "š"
+    expected_path = b"%C5%A1"
     redirect_request = []  # stores the second request to the server
 
     def redirect_resp_handler(sock):
         consume_socket_content(sock, timeout=0.5)
-        location = f'//{host}:{port}/{path}'
+        location = f"//{host}:{port}/{path}"
         sock.send(
             (
-                b'HTTP/1.1 301 Moved Permanently\r\n'
-                b'Content-Length: 0\r\n'
-                b'Location: %s\r\n'
-                b'\r\n'
-            ) % location.encode('utf8')
+                b"HTTP/1.1 301 Moved Permanently\r\n"
+                b"Content-Length: 0\r\n"
+                b"Location: %s\r\n"
+                b"\r\n"
+            )
+            % location.encode("utf8")
         )
         redirect_request.append(consume_socket_content(sock, timeout=0.5))
-        sock.send(b'HTTP/1.1 200 OK\r\n\r\n')
+        sock.send(b"HTTP/1.1 200 OK\r\n\r\n")
 
     close_server = threading.Event()
     server = Server(redirect_resp_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}'
+        url = f"http://{host}:{port}"
         r = requests.get(url=url, allow_redirects=True)
         assert r.status_code == 200
         assert len(r.history) == 1
         assert r.history[0].status_code == 301
-        assert redirect_request[0].startswith(b'GET /' + expected_path + b' HTTP/1.1')
-        assert r.url == '{}/{}'.format(url, expected_path.decode('ascii'))
+        assert redirect_request[0].startswith(b"GET /" + expected_path + b" HTTP/1.1")
+        assert r.url == "{}/{}".format(url, expected_path.decode("ascii"))
 
         close_server.set()
 
@@ -7292,16 +7332,16 @@ def test_fragment_not_sent_with_request():
     server = Server(echo_response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/path/to/thing/#view=edit&token=hunter2'
+        url = f"http://{host}:{port}/path/to/thing/#view=edit&token=hunter2"
         r = requests.get(url)
         raw_request = r.content
 
         assert r.status_code == 200
-        headers, body = raw_request.split(b'\r\n\r\n', 1)
-        status_line, headers = headers.split(b'\r\n', 1)
+        headers, body = raw_request.split(b"\r\n\r\n", 1)
+        status_line, headers = headers.split(b"\r\n", 1)
 
-        assert status_line == b'GET /path/to/thing/ HTTP/1.1'
-        for frag in (b'view', b'edit', b'token', b'hunter2'):
+        assert status_line == b"GET /path/to/thing/ HTTP/1.1"
+        for frag in (b"view", b"edit", b"token", b"hunter2"):
             assert frag not in headers
             assert frag not in body
 
@@ -7317,26 +7357,24 @@ def test_fragment_update_on_redirect():
     def response_handler(sock):
         consume_socket_content(sock, timeout=0.5)
         sock.send(
-            b'HTTP/1.1 302 FOUND\r\n'
-            b'Content-Length: 0\r\n'
-            b'Location: /get#relevant-section\r\n\r\n'
+            b"HTTP/1.1 302 FOUND\r\n"
+            b"Content-Length: 0\r\n"
+            b"Location: /get#relevant-section\r\n\r\n"
         )
         consume_socket_content(sock, timeout=0.5)
         sock.send(
-            b'HTTP/1.1 302 FOUND\r\n'
-            b'Content-Length: 0\r\n'
-            b'Location: /final-url/\r\n\r\n'
+            b"HTTP/1.1 302 FOUND\r\n"
+            b"Content-Length: 0\r\n"
+            b"Location: /final-url/\r\n\r\n"
         )
         consume_socket_content(sock, timeout=0.5)
-        sock.send(
-            b'HTTP/1.1 200 OK\r\n\r\n'
-        )
+        sock.send(b"HTTP/1.1 200 OK\r\n\r\n")
 
     close_server = threading.Event()
     server = Server(response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/path/to/thing/#view=edit&token=hunter2'
+        url = f"http://{host}:{port}/path/to/thing/#view=edit&token=hunter2"
         r = requests.get(url)
 
         assert r.status_code == 200
@@ -7344,9 +7382,9 @@ def test_fragment_update_on_redirect():
         assert r.history[0].request.url == url
 
         # Verify we haven't overwritten the location with our previous fragment.
-        assert r.history[1].request.url == f'http://{host}:{port}/get#relevant-section'
+        assert r.history[1].request.url == f"http://{host}:{port}/get#relevant-section"
         # Verify previous fragment is used and not the original.
-        assert r.url == f'http://{host}:{port}/final-url/#relevant-section'
+        assert r.url == f"http://{host}:{port}/final-url/#relevant-section"
 
         close_server.set()
 
@@ -7356,8 +7394,8 @@ def test_json_decode_compatibility_for_alt_utf_encodings():
     def response_handler(sock):
         consume_socket_content(sock, timeout=0.5)
         sock.send(
-            b'HTTP/1.1 200 OK\r\n'
-            b'Content-Length: 18\r\n\r\n'
+            b"HTTP/1.1 200 OK\r\n"
+            b"Content-Length: 18\r\n\r\n"
             b'\xff\xfe{\x00"\x00K0"\x00=\x00"\x00\xab0"\x00\r\n'
         )
 
@@ -7365,7 +7403,7 @@ def test_json_decode_compatibility_for_alt_utf_encodings():
     server = Server(response_handler, wait_to_close_event=close_server)
 
     with server as (host, port):
-        url = f'http://{host}:{port}/'
+        url = f"http://{host}:{port}/"
         r = requests.get(url)
     r.encoding = None
     with pytest.raises(requests.exceptions.JSONDecodeError) as excinfo:
@@ -7373,6 +7411,8 @@ def test_json_decode_compatibility_for_alt_utf_encodings():
     assert isinstance(excinfo.value, requests.exceptions.RequestException)
     assert isinstance(excinfo.value, JSONDecodeError)
     assert r.text not in str(excinfo.value)
+
+
 from unittest import mock
 
 from requests.help import info
@@ -7400,6 +7440,8 @@ def test_idna_with_version_attribute():
     """Verify we're actually setting idna version when it should be available."""
     with mock.patch("requests.help.idna", new=VersionedPackage("2.6")):
         assert info()["idna"] == {"version": "2.6"}
+
+
 import pytest
 
 from requests import hooks
@@ -7422,6 +7464,8 @@ def test_hooks(hooks_list, result):
 
 def test_default_hooks():
     assert hooks.default_hooks() == {"response": []}
+
+
 import select
 import socket
 import ssl
@@ -7598,6 +7642,8 @@ class TLSServer(Server):
         sock.bind((self.host, self.port))
         sock.listen()
         return sock
+
+
 import requests.adapters
 
 
@@ -7606,6 +7652,8 @@ def test_request_url_trims_leading_path_separators():
     a = requests.adapters.HTTPAdapter()
     p = requests.Request(method="GET", url="http://127.0.0.1:10000//v:h").prepare()
     assert "/v:h" == a.request_url(p, {})
+
+
 """Tests for Requests."""
 
 import collections
@@ -10027,7 +10075,6 @@ class TestMorselToCookieExpires:
 
 
 class TestMorselToCookieMaxAge:
-
     """Tests for morsel_to_cookie when morsel contains max-age."""
 
     def test_max_age_valid_int(self):
@@ -10582,6 +10629,8 @@ def test_json_decode_errors_are_serializable_deserializable():
     )
     deserialized_error = pickle.loads(pickle.dumps(json_decode_error))
     assert repr(json_decode_error) == repr(deserialized_error)
+
+
 import warnings
 
 try:
@@ -10605,10 +10654,24 @@ def u(s):
         DeprecationWarning,
     )
     return s
+
+
 # flasky extensions.  flasky pygments style based on tango style
 from pygments.style import Style
-from pygments.token import Keyword, Name, Comment, String, Error, \
-     Number, Operator, Generic, Whitespace, Punctuation, Other, Literal
+from pygments.token import (
+    Keyword,
+    Name,
+    Comment,
+    String,
+    Error,
+    Number,
+    Operator,
+    Generic,
+    Whitespace,
+    Punctuation,
+    Other,
+    Literal,
+)
 
 
 class FlaskyStyle(Style):
@@ -10617,80 +10680,73 @@ class FlaskyStyle(Style):
 
     styles = {
         # No corresponding class for the following:
-        #Text:                     "", # class:  ''
-        Whitespace:                "underline #f8f8f8",      # class: 'w'
-        Error:                     "#a40000 border:#ef2929", # class: 'err'
-        Other:                     "#000000",                # class 'x'
-
-        Comment:                   "italic #8f5902", # class: 'c'
-        Comment.Preproc:           "noitalic",       # class: 'cp'
-
-        Keyword:                   "bold #004461",   # class: 'k'
-        Keyword.Constant:          "bold #004461",   # class: 'kc'
-        Keyword.Declaration:       "bold #004461",   # class: 'kd'
-        Keyword.Namespace:         "bold #004461",   # class: 'kn'
-        Keyword.Pseudo:            "bold #004461",   # class: 'kp'
-        Keyword.Reserved:          "bold #004461",   # class: 'kr'
-        Keyword.Type:              "bold #004461",   # class: 'kt'
-
-        Operator:                  "#582800",   # class: 'o'
-        Operator.Word:             "bold #004461",   # class: 'ow' - like keywords
-
-        Punctuation:               "bold #000000",   # class: 'p'
-
+        # Text:                     "", # class:  ''
+        Whitespace: "underline #f8f8f8",  # class: 'w'
+        Error: "#a40000 border:#ef2929",  # class: 'err'
+        Other: "#000000",  # class 'x'
+        Comment: "italic #8f5902",  # class: 'c'
+        Comment.Preproc: "noitalic",  # class: 'cp'
+        Keyword: "bold #004461",  # class: 'k'
+        Keyword.Constant: "bold #004461",  # class: 'kc'
+        Keyword.Declaration: "bold #004461",  # class: 'kd'
+        Keyword.Namespace: "bold #004461",  # class: 'kn'
+        Keyword.Pseudo: "bold #004461",  # class: 'kp'
+        Keyword.Reserved: "bold #004461",  # class: 'kr'
+        Keyword.Type: "bold #004461",  # class: 'kt'
+        Operator: "#582800",  # class: 'o'
+        Operator.Word: "bold #004461",  # class: 'ow' - like keywords
+        Punctuation: "bold #000000",  # class: 'p'
         # because special names such as Name.Class, Name.Function, etc.
         # are not recognized as such later in the parsing, we choose them
         # to look the same as ordinary variables.
-        Name:                      "#000000",        # class: 'n'
-        Name.Attribute:            "#c4a000",        # class: 'na' - to be revised
-        Name.Builtin:              "#004461",        # class: 'nb'
-        Name.Builtin.Pseudo:       "#3465a4",        # class: 'bp'
-        Name.Class:                "#000000",        # class: 'nc' - to be revised
-        Name.Constant:             "#000000",        # class: 'no' - to be revised
-        Name.Decorator:            "#888",           # class: 'nd' - to be revised
-        Name.Entity:               "#ce5c00",        # class: 'ni'
-        Name.Exception:            "bold #cc0000",   # class: 'ne'
-        Name.Function:             "#000000",        # class: 'nf'
-        Name.Property:             "#000000",        # class: 'py'
-        Name.Label:                "#f57900",        # class: 'nl'
-        Name.Namespace:            "#000000",        # class: 'nn' - to be revised
-        Name.Other:                "#000000",        # class: 'nx'
-        Name.Tag:                  "bold #004461",   # class: 'nt' - like a keyword
-        Name.Variable:             "#000000",        # class: 'nv' - to be revised
-        Name.Variable.Class:       "#000000",        # class: 'vc' - to be revised
-        Name.Variable.Global:      "#000000",        # class: 'vg' - to be revised
-        Name.Variable.Instance:    "#000000",        # class: 'vi' - to be revised
-
-        Number:                    "#990000",        # class: 'm'
-
-        Literal:                   "#000000",        # class: 'l'
-        Literal.Date:              "#000000",        # class: 'ld'
-
-        String:                    "#4e9a06",        # class: 's'
-        String.Backtick:           "#4e9a06",        # class: 'sb'
-        String.Char:               "#4e9a06",        # class: 'sc'
-        String.Doc:                "italic #8f5902", # class: 'sd' - like a comment
-        String.Double:             "#4e9a06",        # class: 's2'
-        String.Escape:             "#4e9a06",        # class: 'se'
-        String.Heredoc:            "#4e9a06",        # class: 'sh'
-        String.Interpol:           "#4e9a06",        # class: 'si'
-        String.Other:              "#4e9a06",        # class: 'sx'
-        String.Regex:              "#4e9a06",        # class: 'sr'
-        String.Single:             "#4e9a06",        # class: 's1'
-        String.Symbol:             "#4e9a06",        # class: 'ss'
-
-        Generic:                   "#000000",        # class: 'g'
-        Generic.Deleted:           "#a40000",        # class: 'gd'
-        Generic.Emph:              "italic #000000", # class: 'ge'
-        Generic.Error:             "#ef2929",        # class: 'gr'
-        Generic.Heading:           "bold #000080",   # class: 'gh'
-        Generic.Inserted:          "#00A000",        # class: 'gi'
-        Generic.Output:            "#888",           # class: 'go'
-        Generic.Prompt:            "#745334",        # class: 'gp'
-        Generic.Strong:            "bold #000000",   # class: 'gs'
-        Generic.Subheading:        "bold #800080",   # class: 'gu'
-        Generic.Traceback:         "bold #a40000",   # class: 'gt'
+        Name: "#000000",  # class: 'n'
+        Name.Attribute: "#c4a000",  # class: 'na' - to be revised
+        Name.Builtin: "#004461",  # class: 'nb'
+        Name.Builtin.Pseudo: "#3465a4",  # class: 'bp'
+        Name.Class: "#000000",  # class: 'nc' - to be revised
+        Name.Constant: "#000000",  # class: 'no' - to be revised
+        Name.Decorator: "#888",  # class: 'nd' - to be revised
+        Name.Entity: "#ce5c00",  # class: 'ni'
+        Name.Exception: "bold #cc0000",  # class: 'ne'
+        Name.Function: "#000000",  # class: 'nf'
+        Name.Property: "#000000",  # class: 'py'
+        Name.Label: "#f57900",  # class: 'nl'
+        Name.Namespace: "#000000",  # class: 'nn' - to be revised
+        Name.Other: "#000000",  # class: 'nx'
+        Name.Tag: "bold #004461",  # class: 'nt' - like a keyword
+        Name.Variable: "#000000",  # class: 'nv' - to be revised
+        Name.Variable.Class: "#000000",  # class: 'vc' - to be revised
+        Name.Variable.Global: "#000000",  # class: 'vg' - to be revised
+        Name.Variable.Instance: "#000000",  # class: 'vi' - to be revised
+        Number: "#990000",  # class: 'm'
+        Literal: "#000000",  # class: 'l'
+        Literal.Date: "#000000",  # class: 'ld'
+        String: "#4e9a06",  # class: 's'
+        String.Backtick: "#4e9a06",  # class: 'sb'
+        String.Char: "#4e9a06",  # class: 'sc'
+        String.Doc: "italic #8f5902",  # class: 'sd' - like a comment
+        String.Double: "#4e9a06",  # class: 's2'
+        String.Escape: "#4e9a06",  # class: 'se'
+        String.Heredoc: "#4e9a06",  # class: 'sh'
+        String.Interpol: "#4e9a06",  # class: 'si'
+        String.Other: "#4e9a06",  # class: 'sx'
+        String.Regex: "#4e9a06",  # class: 'sr'
+        String.Single: "#4e9a06",  # class: 's1'
+        String.Symbol: "#4e9a06",  # class: 'ss'
+        Generic: "#000000",  # class: 'g'
+        Generic.Deleted: "#a40000",  # class: 'gd'
+        Generic.Emph: "italic #000000",  # class: 'ge'
+        Generic.Error: "#ef2929",  # class: 'gr'
+        Generic.Heading: "bold #000080",  # class: 'gh'
+        Generic.Inserted: "#00A000",  # class: 'gi'
+        Generic.Output: "#888",  # class: 'go'
+        Generic.Prompt: "#745334",  # class: 'gp'
+        Generic.Strong: "bold #000000",  # class: 'gs'
+        Generic.Subheading: "bold #800080",  # class: 'gu'
+        Generic.Traceback: "bold #a40000",  # class: 'gt'
     }
+
+
 # -*- coding: utf-8 -*-
 #
 # Requests documentation build configuration file, created by
@@ -10750,9 +10806,11 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"Requests"
-copyright = u'MMXVIX. A <a href="https://kenreitz.org/projects">Kenneth Reitz</a> Project'
-author = u"Kenneth Reitz"
+project = "Requests"
+copyright = (
+    'MMXVIX. A <a href="https://kenreitz.org/projects">Kenneth Reitz</a> Project'
+)
+author = "Kenneth Reitz"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -10940,7 +10998,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Requests.tex", u"Requests Documentation", u"Kenneth Reitz", "manual")
+    (master_doc, "Requests.tex", "Requests Documentation", "Kenneth Reitz", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -10968,7 +11026,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "requests", u"Requests Documentation", [author], 1)]
+man_pages = [(master_doc, "requests", "Requests Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -10983,7 +11041,7 @@ texinfo_documents = [
     (
         master_doc,
         "Requests",
-        u"Requests Documentation",
+        "Requests Documentation",
         author,
         "Requests",
         "One line description of project.",
