@@ -3,7 +3,7 @@ import numpy as np
 
 tokenizer = tiktoken.get_encoding("gpt2")
 
-with open("corpus.txt", "r") as file:
+with open("LeetcodeProblemsCorpus.txt", "r") as file:
     text = file.read()
 
 tokens = tokenizer.encode(text)
